@@ -5,6 +5,7 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Flight;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -14,8 +15,7 @@ class TaskController extends Controller
     }
 
     public function index(){
-        $tasks = Task::orderBy('created_at','desc')->paginate(5);
-
+  $tasks = Task::where('user_id', Auth::id())-> orderBy('created_at','desc')->paginate(5);
         return view('tasks', compact('tasks'));
 
     }
@@ -30,6 +30,7 @@ class TaskController extends Controller
 
      $task = new Task;
      $task->name = $request->name;
+     $task->user_id = Auth::id();
      $task->save();
      return redirect()->back();
 
